@@ -12,6 +12,12 @@ public class RedisConfiguration {
 	
 	// Redis port
 	private static final String REDIS_PORT = "redis.port";
+
+	// Redis list
+	private static final String REDIS_List = "redis.list";
+	
+	// Redis pub/sub channel
+	private static final String REDIS_PUB_SUB = "redis.pubsub";
 	
 	// singleton config object
 	private static RedisConfiguration config = null;
@@ -19,12 +25,16 @@ public class RedisConfiguration {
 	private String password = null;
 	private String host = null;
 	private Integer port = null;
+	private String pubSubChannel_key = null;
+	private String list_key = null;
 
 	// private constructor for singleton object
 	private RedisConfiguration () {
 		password = Play.application().configuration().getString(REDIS_PASSWORD);
 		host = Play.application().configuration().getString(REDIS_HOST);
 		port = Play.application().configuration().getInt(REDIS_PORT);
+		pubSubChannel_key = Play.application().configuration().getString(REDIS_PUB_SUB);
+		list_key = Play.application().configuration().getString(REDIS_List);
 	}
 	
 	public static RedisConfiguration getInstance() {
@@ -45,4 +55,13 @@ public class RedisConfiguration {
 	public Integer getPort() {
 		return port;
 	}
+
+	public String getPubSubChannel_key() {
+		return pubSubChannel_key;
+	}
+
+	public String getList_key() {
+		return list_key;
+	}
+
 }

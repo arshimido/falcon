@@ -8,11 +8,6 @@ import redis.clients.jedis.JedisPool;
 
 public class Redis {
 	
-	// redis list key, where we persist data
-	private static final String LIST_KEY = "playapilist";
-	
-	//redis pub/sub channel key
-	public static final String PUB_SUB_CHANNEL = "playapichannel";
 	private static JedisPool pool = new JedisPool(RedisConfiguration.getInstance().getHost());
 	
 	public Redis() {
@@ -37,7 +32,7 @@ public class Redis {
 	 */
 	public void add(String message) {
 		Jedis jedis = connect();
-		jedis.lpush(LIST_KEY, message);
+		jedis.lpush(RedisConfiguration.getInstance().getList_key(), message);
 		returnResource(jedis);
 	}
 	
@@ -48,7 +43,7 @@ public class Redis {
 	 */
 	public List<String> getAll() {
 		Jedis jedis = connect();
-		List<String> list = jedis.lrange(LIST_KEY, 0, -1);
+		List<String> list = jedis.lrange(RedisConfiguration.getInstance().getList_key(), 0, -1);
 		returnResource(jedis);
 		return list;
 	}
@@ -60,7 +55,7 @@ public class Redis {
 	 */
 	public void publish(String message) {
 		Jedis jedis = connect();
-		jedis.publish(PUB_SUB_CHANNEL, message);
+		jedis.publish(RedisConfiguration.getInstance().getPubSubChannel_key(), message);
 		returnResource(jedis);
 	}
 	

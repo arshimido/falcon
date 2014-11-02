@@ -1,5 +1,6 @@
 package controllers;
 
+import models.JsonHelper;
 import models.Redis;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -14,6 +15,12 @@ public class API extends Controller {
     		redis.add(data[0]);
     	}
     	return ok(add.render("OK"));
+    }
+    
+    public static Result getAllMessages() {
+    	Redis redis = new Redis();
+    	response().setContentType("application/json");
+    	return ok(JsonHelper.construct(redis.getAll()));
     }
 
 }

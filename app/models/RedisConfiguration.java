@@ -4,19 +4,27 @@ import play.Play;
 
 public class RedisConfiguration {
 
-	private static final String JNDI_REDIS_PASSWORD = "redis.password";
-	private static final String JNDI_REDIS_HOST = "redis.host";
-	private static final String JNDI_REDIS_PORT = "redis.port";
+	// redis password for authentication
+	private static final String REDIS_PASSWORD = "redis.password";
+	
+	// Redis host
+	private static final String REDIS_HOST = "redis.host";
+	
+	// Redis port
+	private static final String REDIS_PORT = "redis.port";
+	
+	// singleton config object
 	private static RedisConfiguration config = null;
 	
 	private String password = null;
 	private String host = null;
 	private Integer port = null;
 
+	// private constructor for singleton object
 	private RedisConfiguration () {
-		password = Play.application().configuration().getString(JNDI_REDIS_PASSWORD);
-		host = Play.application().configuration().getString(JNDI_REDIS_HOST);
-		port = Play.application().configuration().getInt(JNDI_REDIS_PORT);
+		password = Play.application().configuration().getString(REDIS_PASSWORD);
+		host = Play.application().configuration().getString(REDIS_HOST);
+		port = Play.application().configuration().getInt(REDIS_PORT);
 	}
 	
 	public static RedisConfiguration getInstance() {

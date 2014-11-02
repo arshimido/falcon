@@ -1,23 +1,33 @@
 package models;
 
-import play.Logger;
 import redis.clients.jedis.JedisPubSub;
 
 public class Consumer extends JedisPubSub {
 
+	/**
+	 * Default constructor
+	 */
 	public Consumer() {
-		Logger.info("------------------------ CONSUMER STARTED TO LISTEN --------------------");
+		
 	}
+	
+	
 	@Override
-	public void onMessage(String arg0, String arg1) {
-		//save to redis
-		Logger.info(" >>>>>>>>>>> MESSAGE RECEIVED");
-		Logger.info(arg0 + ":" + arg1);
+	/**
+	 * Listen to Redis pub/sub channel and waits for message.
+	 * Save message to Redis list.
+	 * Notify {@link RealTimebroadcaster} with message
+	 * 
+	 * @param channel : channel message published on
+	 * @param message : message published on channel
+	 */
+	public void onMessage(String channel, String message) {
+		//Persist message
 		Redis redis = new Redis();
-		redis.add(arg1);
+		redis.add(message);
 
 		// send message sockets handler
-		RealTimebroadcaster.broadcast(arg1);
+		RealTimebroadcaster.broadcast(message);
 	}
 
 	@Override

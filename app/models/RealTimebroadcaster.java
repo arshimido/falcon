@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import play.Logger;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.WebSocket;
@@ -25,25 +24,18 @@ public class RealTimebroadcaster extends UntypedActor{
 	// browsers listening
     Set<WebSocket.Out<JsonNode>> members = new HashSet<WebSocket.Out<JsonNode>>();
     
-	static {	
-		Logger.info("0000000000   Broadcast starts ");
-    	//subscribe to the message channel
-    	Akka.system().scheduler().scheduleOnce(
-    	        Duration.create(10, TimeUnit.MILLISECONDS),
-    	        new Runnable() {
-    	            public void run() {
-    	            	Jedis j = Redis.getJedisInstance();
-    	            	j.subscribe(new Consumer(), Redis.PUB_SUB_CHANNEL);
-    	            }
-    	        },
-    	        Akka.system().dispatcher()
-    	);
-    }
-	
+    /**
+     * Broadcast message to all listeners
+     * 
+     * @param message
+     */
 	public static void broadcast(String message) {
 		context.tell(message, null);
 	}
 
+	/**
+	 * This method is invokded when a new message received
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onReceive(Object msg) throws Exception {
@@ -56,6 +48,10 @@ public class RealTimebroadcaster extends UntypedActor{
 		}
 	}
 	
+	/**
+	 * notify all listeners with message over websockets
+	 * @param message
+	 */
 	public void notifyAll(String message) {
         for(WebSocket.Out<JsonNode> channel: members) {
             
@@ -66,8 +62,30 @@ public class RealTimebroadcaster extends UntypedActor{
         }
     }
 	
-	public static void listen(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) throws Exception{
-		Await.result(akka.pattern.Patterns.ask(context, out, 5000), Duration.create(5, TimeUnit.SECONDS));
+	/**
+	 * Register new Listener. (new browser client is listening)
+	 * 
+	 * @param out
+	 * @throws Exception
+	 */
+	public static void listen(WebSocket.Out<JsonNode> out) throws Exception{
+		Await.result(akka.pattern.Patterns.ask(context, out, 3000), Duration.create(3, TimeUnit.SECONDS));
+	}
+	
+	/**
+	 *  initialize {@link RealTimebroadcaster}
+	 */
+	public static void init() {
+    	Akka.system().scheduler().scheduleOnce(
+    	        Duration.create(10, TimeUnit.MILLISECONDS),
+    	        new Runnable() {
+    	            public void run() {
+    	            	Jedis j = Redis.getJedisInstance();
+    	            	j.subscribe(new Consumer(), RedisConfiguration.getInstance().getPubSubChannel_key());
+    	            }
+    	        },
+    	        Akka.system().dispatcher()
+    	);
 	}
 
 }

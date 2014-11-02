@@ -1,6 +1,11 @@
 package models;
 
 import java.util.List;
+
+import play.libs.Json;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * @author mohamed
  *
@@ -15,14 +20,16 @@ public class JsonHelper {
 	 * @return String : constructed json object
 	 */
 	public static String construct(List<String> list) {
-    	String res = "{ \"all\": [";
-    	
-    	for (int i = 0; i < list.size(); i++) {
-    		res += "\"" + list.get(i) + "\"";
-    		if (i < list.size() - 1)
-    			res += ",";
+		ObjectNode node = Json.newObject();
+		ArrayNode arr = node.putArray("all");
+    	for (String temp : list) {
+    		arr.add(temp);
     	}
-    	
-    	return res + "]}";
+    	return node.toString();
+	}
+	
+	public static String toJsonString(String parameter) {
+		ObjectNode node = (ObjectNode) Json.parse(parameter);
+		return node.toString();
 	}
 }

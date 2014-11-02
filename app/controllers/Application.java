@@ -24,7 +24,7 @@ public class Application extends Controller {
 
 				// Join the chat room.
 				try {
-					RealTimebroadcaster.listen(in, out);
+					RealTimebroadcaster.listen(out);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

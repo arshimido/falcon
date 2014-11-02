@@ -5,15 +5,13 @@ $(function() {
     var chatSocket = new WS("@routes.Application.realTime().webSocketURL(request)")
 
     var receiveEvent = function(event) {
-    	alert(event);
     	alert(event.data);
     	var data = JSON.parse(event.data)
     	
         // Create the message element
-        var el = $('<div class="message"><p></p></div>')
-        $("p", el).text(data.message)
+        var el = $('<div class="message">' + data.message + '</div>')
         $('#messages').append(el);
-        $('#messages').append("<br ><br >");
+        $(el).animate({ color: "black"}, 4000);
 
     }
 

@@ -1,0 +1,19 @@
+
+.messages-container {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2%;
+}
+
+.messages-container .message {
+	clear: both;
+	width: 80%;
+	height: 100%;
+	margin-top: 5px;
+	color: red;
+}
+
+.clear {
+	clear: both;
+}

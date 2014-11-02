@@ -12,7 +12,7 @@ public class RedisConfiguration {
 	private String password = null;
 	private String host = null;
 	private Integer port = null;
-	
+
 	private RedisConfiguration () {
 		password = Play.application().configuration().getString(JNDI_REDIS_PASSWORD);
 		host = Play.application().configuration().getString(JNDI_REDIS_HOST);

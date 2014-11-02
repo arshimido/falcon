@@ -12,7 +12,7 @@ public class API extends Controller {
     	String [] data = request().body().asFormUrlEncoded().get("data");
     	if(data != null && data.length > 0) {
     		Redis redis = new Redis();
-    		redis.add(data[0]);
+    		redis.publish(data[0]);
     	}
     	return ok(add.render("OK"));
     }

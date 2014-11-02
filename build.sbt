@@ -11,5 +11,6 @@ libraryDependencies ++= Seq(
   javaEbean,
   cache,
   javaWs,
-  "redis.clients" % "jedis" % "2.6.0"
+  "redis.clients" % "jedis" % "2.6.0",
+  "commons-io" % "commons-io" % "2.4"
 )

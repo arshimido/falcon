@@ -1,4 +1,63 @@
-This is your new Play application
-=================================
+Readme for Test task:
+=====================
 
-This file will be packaged with your application, when using `activator dist`.
+Quick notes:
+-------------
+
+Total time spent in development is: ~ 19 hours (excluding deployment time)
+
+- This is my first time ever to use Play! framework.
+- I've used External library "Jedis" for Redis interaction.
+- I know I should have been included it as dependency. But when did so in build.sbt, "activator" couldn't resolve dependency although it exists on "http://repo.typesafe.com/typesafe/releases/". This issue has taken alot of time (2 - 3 hours) So I decided to go forward using it as a jar to save some time.
+- I intended to write Unit test, But then I thought it might be out of this task's scope. (I know its very important, specially when implementing an API)
+- I assumed that UI and CSS are out of scope so I didn't spend much time on them. (just structured the page).
+
+What the applicatoin provides:
+
+
+(a) 2 REST endpoints: 
+======================
+1) Add dummy JSON
+  url                 "http://<host>/api/v1/add"
+  parameter name:     "data"  
+  method:             POST (why? REST standard, this endpoint creates new record (changes state) )
+  desc:               This endpoint takes the content of parameter "data" and publishes it to Redis pub/sub DB
+  
+2) Retrieve all persisted messages in JSON format
+  url                 "http://<host>/api/v1/all"
+  parameter name:     <NONE>
+  method:             GET (why? REST standards, this endpoint doesn't change any states, even call million times)
+  desc:               This endpoint retreives all persisted messages, it responds with JSON
+  
+why "api/v1/???" ??? this is just simulation for real API that has many versions.
+
+
+
+(b) 1 HTML page
+================
+URL: http://<host/listen
+
+This is the page where you can see the real time messages just once they arrive on "Add dummy JSON endpoint"
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+
+other requirements:
+===================
+1) "A Consumer is running the application and processes the freshly received message and persists the message in a NoSQL database"
+=> Consumer.java
+This is a listener subscribed in Redis pub/sub channel (which REST endpoint uses to publish messages).
+It does 2 things: - Persistes the message in Redis.   - then sends the message to ReaTimeBroadcaster.
+
+2) "The message should also be pushed through Websockets for listening browser clients at the time the message was received on the REST endpoint"
+=> RealTimeBroadcaster.java
+Waits for messages from "Consumer" and notify all registered listeners (browser clients) with the message through websockets.
+
+3) "The application is build for scale"
+=> I tried the best to keep in mind the scalability of application.
+ - I tried hard to keep it thread safe while using (Using database pool <JedisPool>)
+ - We may use Redis clustering feature when there is a need to scale.
+
+
+4) "The application is build for test"
+=> I really didn't understand what is meant by this note :)
+

@@ -37,9 +37,11 @@ why "api/v1/???" ??? this is just simulation for real API that has many versions
 ================
 URL: http://<host/listen
 
-This is the page where you can see the real time messages just once they arrive on "Add dummy JSON endpoint"
------------------------------------------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------------------------------------
+This is the page where you can see the real time messages just once they arrive on "Add dummy JSON" endpoint.
+
+This page displays javascript alert containing the received real time message (just to attract your attention).
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 
 other requirements:
 ===================
@@ -59,5 +61,15 @@ Waits for messages from "Consumer" and notify all registered listeners (browser 
 
 
 4) "The application is build for test"
-=> I really didn't understand what is meant by this note :)
+=> I really didn't understand what is needed by this note, but this gave me hint for:
+ - Application secret can be contained in source code (in production deployment this is highly no recommended)
+ - Application may be deployed with activator the build in server. There is no need to deploy it behind a front end server (Apache or NginX), hence, no need for complex server configurations.
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
+testing the app:
+=================
+- open browser on "http://ec2-54-220-105-5.eu-west-1.compute.amazonaws.com:9000/listen" to start listening to real time messages.
+- send POST request to "http://ec2-54-220-105-5.eu-west-1.compute.amazonaws.com:9000/api/v1/add", send json object in parameter called "data".
+- the html page displays javascript alert message containing the mesage and appends it to the page.
+- you can open "http://ec2-54-220-105-5.eu-west-1.compute.amazonaws.com:9000/all" to see all persisted data displayed in json format within a json object called "all". 
